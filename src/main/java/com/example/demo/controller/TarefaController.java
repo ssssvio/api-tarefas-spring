@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.TarefaRequestDTO;
 import jakarta.validation.Valid;
+import com.example.demo.dto.UpdateTarefaDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +39,14 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizarTarefa(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada) {
+    public ResponseEntity<Tarefa> atualizarTarefa(
+            @PathVariable Long id,
+            @RequestBody UpdateTarefaDTO dto
+    ) {
         return tarefaRepository.findById(id).map(tarefa -> {
-            tarefa.setNome(tarefaAtualizada.getNome());
-            tarefa.setDataEntrega(tarefaAtualizada.getDataEntrega());
-            tarefa.setResponsavel(tarefaAtualizada.getResponsavel());
+            tarefa.setNome(dto.getNome());
+            tarefa.setDataEntrega(dto.getDataEntrega());
+            tarefa.setResponsavel(dto.getResponsavel());
             Tarefa atualizado = tarefaRepository.save(tarefa);
             return ResponseEntity.ok(atualizado);
         }).orElseGet(() -> ResponseEntity.notFound().build());
